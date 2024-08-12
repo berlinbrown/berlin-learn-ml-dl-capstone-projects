@@ -11,3 +11,6 @@ Respond better,
 Gaming
 
 Using  Numenta, Chat Bots and other ML to build bots that dont operate to win.
+
+### Busy Bees
+Distrbuted and not distributed
