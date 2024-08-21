@@ -13,7 +13,7 @@ import warnings
 from scipy.stats import median_abs_deviation
 from sklearn.ensemble import IsolationForest
 from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay
-
+from sklearn.neighbors import LocalOutlierFactor
 
 warnings.filterwarnings('ignore')
 
@@ -32,7 +32,8 @@ def run_all():
 
     df['is_anomaly'] = 1
     for each in anomalies_timestamp:
-        df.loc[df['timestamp'] == each, 'is_anomaly'] = -1    
+        df.loc[df['timestamp'] == each, 'is_anomaly'] = -1  
+
     df.head()
     anomaly_df = df.loc[df['is_anomaly'] == -1]
     inlier_df = df.loc[df['is_anomaly'] == 1]
@@ -70,14 +71,30 @@ def run_all():
     df['z-score'] = df['value'].apply(compute_robust_z_score)
     df.head()
 
+    # Set entire column baseline to 1
     df['baseline'] = 1
     df.loc[df['z-score'] >= 3.5, 'baseline'] = -1
     df.loc[df['z-score'] <=-3.5, 'baseline'] = -1
+
+    l1 = len(df[:3550])
+    l2 = len(df[3550:])
+    print('Testing Isolation Forest')
+    print(' -> Length of DF before to train - ' + str(l1))
+    print(' -> Length of DF before to test - ' + str(l2))
 
     train = df[:3550]
     test = df[3550:]
     contamination = 1/len(train)
 
+    # Print final table
+    # Final rows: timestamp  value  is_anomaly  z-score  baseline
+    print(df)
+
+    d3 = test.loc[test['is_anomaly'] == -1]
+    print(d3)
+
+    # unsupervised learning to isolated anomalies
+    
     iso_forest = IsolationForest(contamination=contamination, random_state=42)
     X_train = train['value'].values.reshape(-1,1)
     iso_forest.fit(X_train)
@@ -85,8 +102,22 @@ def run_all():
     preds_iso_forest = iso_forest.predict(test['value'].values.reshape(-1,1))
     cm = confusion_matrix(test['is_anomaly'], preds_iso_forest, labels=[1, -1])
 
+    # Show but still failed
     disp_cm = ConfusionMatrixDisplay(cm, display_labels=[1, -1])
     disp_cm.plot();
+    plt.grid(False)
+    plt.tight_layout()
+    plt.show()
+
+    # Local density of point to density of neighbors
+    # Must be an outlier
+    # Show confusion matrix
+    lof = LocalOutlierFactor(contamination=contamination, novelty=True)
+    lof.fit(X_train)
+    preds_lof = lof.predict(test['value'].values.reshape(-1,1))
+    cm = confusion_matrix(test['is_anomaly'], preds_lof, labels=[1, -1])
+    disp_cm = ConfusionMatrixDisplay(cm, display_labels=[1, -1])
+    disp_cm.plot()
     plt.grid(False)
     plt.tight_layout()
     plt.show()
