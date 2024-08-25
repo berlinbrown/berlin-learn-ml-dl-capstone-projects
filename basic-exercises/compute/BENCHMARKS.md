@@ -17,6 +17,8 @@ In order from best to worst starting at top
 
 https://opendata.blender.org/benchmarks/303b31a5-542f-4a3d-8af3-19ae69bd5125/
 
+  (Cost 300)
+
 2. AMD Ryzen 5 5600X 6-Core Processor - Same machine Windows 10, powerspec CPU
   Score 148.82
 
@@ -29,6 +31,14 @@ https://opendata.blender.org/benchmarks/303b31a5-542f-4a3d-8af3-19ae69bd5125/
    Score: 26.56
   https://opendata.blender.org/benchmarks/beeafa54-afc9-4ebc-84f8-3da5e2a37f34/
 
+5. Not listed Nvidia 4090 - PC - $4000
+
+
+6. https://opendata.blender.org/benchmarks/eb7b2ad4-4c8a-48b2-93b2-23030eb748d6/
+
+197 score
+
+NVIDIA GeForce GTX 1050 Ti
 
 Summary - how did the macbook pro do worse than the thinkpad. GPUs are king, way above the CPU
 
