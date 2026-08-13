@@ -104,18 +104,16 @@ public class Game extends JPanel {
     public void newGame() {
         message = null;
         board.reset();
-        if(bot_q != null) {
+        if (bot_q != null) {
             bot_q.clearHistory();
-        }
-        else if(bot_sarsa != null){
+        } else if (bot_sarsa != null) {
             bot_sarsa.clearHistory();
         }
-        if(bot_q != null || bot_sarsa != null) {
-            if(random.nextBoolean()) {
-                if(bot_q != null) {
+        if (bot_q != null || bot_sarsa != null) {
+            if (random.nextBoolean()) {
+                if (bot_q != null) {
                     bot_q.act();
-                }
-                else if(bot_sarsa != null){
+                } else if (bot_sarsa != null) {
                     bot_sarsa.act();
                 }
             }
@@ -125,49 +123,47 @@ public class Game extends JPanel {
 
     private void playerAct(MouseEvent e) {
 
-        if(bot_sarsa == null && bot_q == null){
-            int stateCount = (int)Math.pow(3, board.size() * board.size());
+        if (bot_sarsa == null && bot_q == null) {
+            int stateCount = (int) Math.pow(3, board.size() * board.size());
             int actionCount = board.size() * board.size();
 
             model_sarsa = new SarsaLearner(stateCount, actionCount);
             bot_sarsa = new SarsaBot(1, board, model_sarsa);
         }
 
-
-        int x = (int)(3.0 * e.getX() / SCREEN_WIDTH);
-        int y = (int)(3.0 * e.getY() / SCREEN_HEIGHT);
-        if(board.getCell(x, y) == 0) {
-            board.move(new Position(x, y), 2);
+        int x = (int) (3.0 * e.getX() / SCREEN_WIDTH);
+        int y = (int) (3.0 * e.getY() / SCREEN_HEIGHT);
+        if (board.getCell(x, y) == 0) {
+            Position pos = new Position(x, y);
+            System.out.println("Player clicked position: " + pos);
+            board.move(pos, 2);
         }
 
-        if(bot_q != null) {
+        if (bot_q != null) {
             bot_q.act();
-        }
-        else if(bot_sarsa != null){
+        } else if (bot_sarsa != null) {
             bot_sarsa.act();
         }
-        if(!board.canBePlayed()){
+        if (!board.canBePlayed()) {
             int winner = board.getWinner();
-            if(winner == 1){
+            if (winner == 1) {
                 message = "Bot Win!";
-            } else if(winner == 2) {
+            } else if (winner == 2) {
                 message = "You Win!";
             } else {
                 message = "Game Ended!";
             }
 
-            if(bot_q != null) {
+            if (bot_q != null) {
                 bot_q.updateStrategy();
                 bot_q.clearHistory();
-            }
-            else if(bot_sarsa != null){
+            } else if (bot_sarsa != null) {
                 bot_sarsa.updateStrategy();
                 bot_sarsa.clearHistory();
             }
         }
         repaint();
     }
-
 
     @Override
     protected void paintComponent(Graphics g) {
@@ -180,21 +176,21 @@ public class Game extends JPanel {
         g.drawLine(SCREEN_WIDTH, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 
         g.drawLine(0, 0, SCREEN_WIDTH, 0);
-        g.drawLine(0, SCREEN_HEIGHT/ 3, SCREEN_WIDTH, SCREEN_HEIGHT/ 3);
+        g.drawLine(0, SCREEN_HEIGHT / 3, SCREEN_WIDTH, SCREEN_HEIGHT / 3);
         g.drawLine(0, SCREEN_HEIGHT * 2 / 3, SCREEN_WIDTH, SCREEN_HEIGHT * 2 / 3);
         g.drawLine(0, SCREEN_HEIGHT, SCREEN_WIDTH, SCREEN_HEIGHT);
 
         int size = SCREEN_WIDTH / 6;
 
-        for(int i=0; i < 3; ++i) {
-            for(int j=0; j < 3; ++j) {
+        for (int i = 0; i < 3; ++i) {
+            for (int j = 0; j < 3; ++j) {
                 int cell = board.getCell(i, j);
                 int x = i * SCREEN_WIDTH / 3 + size / 2;
                 int y = j * SCREEN_HEIGHT / 3 + size / 2;
-                if(cell==0) {
+                if (cell == 0) {
                     continue;
                 }
-                if(cell == 1) {
+                if (cell == 1) {
                     g.setColor(Color.yellow);
                 } else {
                     g.setColor(Color.black);
@@ -203,7 +199,7 @@ public class Game extends JPanel {
             }
         }
 
-        if(message != null) {
+        if (message != null) {
             Font small = new Font("Helvetica", Font.BOLD, 14);
             FontMetrics fm = getFontMetrics(small);
 

@@ -45,4 +45,9 @@ public class Position {
         int y = intValue - x * board.size();
         return new Position(x, y);
     }
+
+    @Override
+    public String toString() {
+        return "Position(x=" + x + ", y=" + y + ")";
+    }
 }

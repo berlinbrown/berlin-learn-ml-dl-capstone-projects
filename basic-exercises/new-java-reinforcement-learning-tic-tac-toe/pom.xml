@@ -140,7 +140,7 @@
                             <transformers>
                                 <transformer
                                         implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-                                    <mainClass>com.github.chen0040.jrl.ttt.gui.Application</mainClass>
+                                    <mainClass>com.github.chen0040.jrl.tictactoe.gui.Application</mainClass>
                                 </transformer>
                             </transformers>
                         </configuration>
